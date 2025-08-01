@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">WSMS</string>
+    <string name="trustedUrl">https://wsms.ru</string>
+    <string name="twaHost">wsms.ru</string>
+    <string name="asset_statements">[\n\n  {\n\n    \"relation\": [\"delegate_permission/common.handle_all_urls\"],\n\n    \"target\": {\n\n      \"namespace\": \"android_app\",\n\n      \"package_name\": \"com.wsms.app\",\n\n      \"sha256_cert_fingerprints\":\n\n        [\"5D:5C:30:A6:02:1B:E7:5A:D1:09:73:56:F8:6F:B7:DF:7F:D5:92:F2:47:C1:A0:7C:D7:7D:25:A1:CA:E0:19:11\"]\n\n    }\n\n  }\n\n]</string>
+
+    <!--    https://developers.google.com/digital-asset-links/tools/generator?hl=ru-->
+<!--    https://wsms.ru/.well-known/assetlinks.json-->
+</resources>

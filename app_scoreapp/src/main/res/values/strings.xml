@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">MSTscore</string>
+    <string name="trustedUrl">https://scoreapp.biz/</string>
+    <string name="twaHost">scoreapp.biz</string>
+
+<!--    https://developers.google.com/digital-asset-links/tools/generator?hl=ru-->
+<!--    https://tgstickerscatalogue.web.app/.well-known/assetlinks.json-->
+</resources>
+
