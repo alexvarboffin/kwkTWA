@@ -14,50 +14,25 @@
         android:theme="@style/Theme.TWA"
         tools:targetApi="31">
 
-<!--        <activity-->
-<!--            android:name="com.google.androidbrowserhelper.trusted.LauncherActivity"-->
-<!--            android:exported="true">-->
-
-<!--            &lt;!&ndash; Edit android:value to change the url opened by the Trusted Web Activity &ndash;&gt;-->
-<!--            <meta-data-->
-<!--                android:name="android.support.customtabs.trusted.DEFAULT_URL"-->
-<!--                android:value="@string/trustedUrl" />-->
-
-<!--            &lt;!&ndash; This intent-filter adds the Trusted Web Activity to the Android Launcher &ndash;&gt;-->
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
-
-<!--            &lt;!&ndash;-->
-<!--              This intent-filter allows the Trusted Web Activity to handle Intents to open-->
-<!--              airhorner.com.-->
-<!--            &ndash;&gt;-->
-<!--            <intent-filter android:autoVerify="true">-->
-<!--                <action android:name="android.intent.action.VIEW" />-->
-
-<!--                <category android:name="android.intent.category.DEFAULT" />-->
-<!--                <category android:name="android.intent.category.BROWSABLE" />-->
-
-<!--                &lt;!&ndash; Edit android:host to handle links to the target URL&ndash;&gt;-->
-<!--                <data-->
-<!--                    android:host="@string/twaHost"-->
-<!--                    android:scheme="https" />-->
-<!--            </intent-filter>-->
-<!--        </activity>-->
-        <!--        if use full twa-->
-
         <activity
-            android:name=".MainActivity"
-            android:exported="true"
-            android:label="TWA"
-            android:noHistory="true"
-            android:windowActionBar="false"
-            android:windowFullscreen="true">
+            android:name="com.google.androidbrowserhelper.trusted.LauncherActivity"
+            android:exported="true">
+
+            <!-- Edit android:value to change the url opened by the Trusted Web Activity -->
+            <meta-data
+                android:name="android.support.customtabs.trusted.DEFAULT_URL"
+                android:value="@string/trustedUrl" />
+
+            <!-- This intent-filter adds the Trusted Web Activity to the Android Launcher -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <!--
+              This intent-filter allows the Trusted Web Activity to handle Intents to open
+              airhorner.com.
+            -->
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
 
@@ -68,13 +43,38 @@
                 <data
                     android:host="@string/twaHost"
                     android:scheme="https" />
-
             </intent-filter>
-
-            <meta-data
-                android:name="android.support.customtabs.trusted.DEFAULT_URL"
-                android:value="@string/trustedUrl" />
         </activity>
+        <!--        if use full twa-->
+
+<!--        <activity-->
+<!--            android:name=".MainActivity"-->
+<!--            android:exported="true"-->
+<!--            android:label="TWA"-->
+<!--            android:noHistory="true"-->
+<!--            android:windowActionBar="false"-->
+<!--            android:windowFullscreen="true">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
+<!--            <intent-filter android:autoVerify="true">-->
+<!--                <action android:name="android.intent.action.VIEW" />-->
+
+<!--                <category android:name="android.intent.category.DEFAULT" />-->
+<!--                <category android:name="android.intent.category.BROWSABLE" />-->
+
+<!--                &lt;!&ndash; Edit android:host to handle links to the target URL&ndash;&gt;-->
+<!--                <data-->
+<!--                    android:host="@string/twaHost"-->
+<!--                    android:scheme="https" />-->
+
+<!--            </intent-filter>-->
+
+<!--            <meta-data-->
+<!--                android:name="android.support.customtabs.trusted.DEFAULT_URL"-->
+<!--                android:value="@string/trustedUrl" />-->
+<!--        </activity>-->
 
 
         <!--        <activity-->
@@ -91,7 +91,7 @@
         <!--            </intent-filter>-->
         <!--        </activity>-->
         <receiver
-            android:name="com.scoreap.mstscore.receiver.CustomTabsBroadcastReceiver"
+            android:name="com.scoreap.most.score.app.CustomTabsBroadcastReceiver"
             android:enabled="true" />
 
     </application>
