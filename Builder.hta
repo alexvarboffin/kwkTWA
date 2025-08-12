@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gradle Module Selector</title>
+    <HTA:APPLICATION 
+        ID="GradleModuleSelector"
+        APPLICATIONNAME="Gradle Module Selector"
+        BORDER="dialog"
+        BORDERSTYLE="normal"
+        CAPTION="yes"
+        ICON="shell32.dll"
+        MAXIMIZEBUTTON="no"
+        MINIMIZEBUTTON="yes"
+        SHOWINTASKBAR="yes"
+        SINGLEINSTANCE="yes"
+        SYSMENU="yes"
+        WINDOWSTATE="normal"
+    />
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        select { width: 300px; padding: 5px; margin: 10px 0; }
+        button { padding: 8px 16px; margin: 5px; }
+        #output { border: 1px solid #ccc; padding: 10px; height: 200px; overflow-y: scroll; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Gradle Module Selector</h1>
+    
+    <div>
+        <label for="moduleList">Select module:</label>
+        <select id="moduleList"></select>
+    </div>
+    
+    <div>
+        <button onclick="buildAPK()">Build APK</button>
+        <button onclick="buildAAB()">Build AAB</button>
+        <button onclick="buildBoth()">Build Both</button>
+        <button onclick="refreshModules()">Refresh Modules</button>
+    </div>
+    
+    <div id="output"></div>
+    
+    <script language="JScript">
+    function LoadModules() {
+        var output = document.getElementById("output");
+        output.innerHTML = "Searching for modules...<br>";
+
+        try {
+            var fso = new ActiveXObject("Scripting.FileSystemObject");
+            var projectPath = fso.GetParentFolderName(document.location.pathname) + "\\";
+            output.innerHTML += "Project path: " + projectPath + "<br>";
+
+            var moduleList = document.getElementById("moduleList");
+            moduleList.innerHTML = "";
+
+            // Ищем во всех подпапках проекта
+            var folder = fso.GetFolder(projectPath);
+            var subfolders = new Enumerator(folder.SubFolders);
+            var modulesFound = 0;
+
+            for (; !subfolders.atEnd(); subfolders.moveNext()) {
+                var subfolder = subfolders.item();
+                if (fso.FileExists(subfolder.Path + "\\build.gradle") || 
+                    fso.FileExists(subfolder.Path + "\\build.gradle.kts")) {
+                    var option = document.createElement("option");
+                    option.value = subfolder.Name;
+                    option.text = subfolder.Name;
+                    moduleList.add(option);
+                    modulesFound++;
+                    output.innerHTML += "Found module: " + subfolder.Name + "<br>";
+                }
+            }
+
+            if (modulesFound == 0) {
+                output.innerHTML += "No Gradle modules found! Check:<br>";
+                output.innerHTML += "1. Is build.hta in the project root?<br>";
+                output.innerHTML += "2. Do subfolders contain build.gradle?";
+            }
+        } catch(e) {
+            output.innerHTML += "Error: " + e.message + "<br>";
+        }
+    }
+
+    function refreshModules() {
+        LoadModules();
+    }
+
+    function runGradleCommand(command, callback) {
+        var output = document.getElementById('output');
+        var moduleList = document.getElementById('moduleList');
+        var selectedModule = moduleList.value;
+        
+        if (!selectedModule) {
+            output.innerHTML += "Please select a module first!<br>";
+            return;
+        }
+        
+        var fullCommand = 'gradlew :' + selectedModule + ':' + command;
+        output.innerHTML += "> " + fullCommand + "<br>";
+        
+        try {
+            var shell = new ActiveXObject('WScript.Shell');
+            var exec = shell.Exec('cmd /c ' + fullCommand);
+            
+            var timer = setInterval(function() {
+                if (exec.Status != 0) return;
+                
+                var stdout = exec.StdOut.ReadAll();
+                var stderr = exec.StdErr.ReadAll();
+                
+                if (stdout) output.innerHTML += stdout + "<br>";
+                if (stderr) output.innerHTML += "ERROR: " + stderr + "<br>";
+                
+                clearInterval(timer);
+                if (callback) callback();
+            }, 100);
+        } catch(e) {
+            output.innerHTML += "Command error: " + e.message + "<br>";
+        }
+    }
+
+function buildAPK() {
+    runGradleCommand('assembleRelease', function() {
+        var output = document.getElementById('output');
+        output.innerHTML += "APK build completed!<br>";
+        copyBuildArtifacts('apk');
+    });
+}
+
+function buildAAB() {
+    runGradleCommand('bundleRelease', function() {
+        var output = document.getElementById('output');
+        output.innerHTML += "AAB build completed!<br>";
+        copyBuildArtifacts('aab');
+    });
+}
+
+function copyBuildArtifacts(type) {
+    try {
+        var fso = new ActiveXObject("Scripting.FileSystemObject");
+        var moduleList = document.getElementById('moduleList');
+        var selectedModule = moduleList.value;
+        var projectPath = fso.GetParentFolderName(document.location.pathname) + "\\";
+        var output = document.getElementById('output');
+        
+        var sourceDir, destDir, filePattern;
+        
+        if (type == 'apk') {
+            sourceDir = projectPath + selectedModule + "\\build\\outputs\\apk\\release\\";
+            destDir = projectPath;
+            filePattern = "*.apk";
+        } else {
+            sourceDir = projectPath + selectedModule + "\\build\\outputs\\bundle\\release\\";
+            destDir = projectPath;
+            filePattern = "*.aab";
+        }
+        
+        if (!fso.FolderExists(sourceDir)) {
+            output.innerHTML += "Folder not found: " + sourceDir + "<br>";
+            return;
+        }
+        
+        var folder = fso.GetFolder(sourceDir);
+        var files = new Enumerator(folder.Files);
+        var filesCopied = 0;
+        
+        for (; !files.atEnd(); files.moveNext()) {
+            var file = files.item();
+            if (file.Name.match(new RegExp(filePattern.replace('*', '.*')))) {
+                var destFile = destDir + file.Name;
+                if (fso.FileExists(destFile)) {
+                    fso.DeleteFile(destFile, true);
+                }
+                fso.CopyFile(file.Path, destDir);
+                filesCopied++;
+                output.innerHTML += "Copied: " + file.Name + " to project root<br>";
+            }
+        }
+        
+        if (filesCopied == 0) {
+            output.innerHTML += "No " + type.toUpperCase() + " files found in: " + sourceDir + "<br>";
+        }
+    } catch(e) {
+        document.getElementById('output').innerHTML += "Copy error: " + e.message + "<br>";
+    }
+}
+
+    window.onload = LoadModules;
+    </script>
+</body>
+</html>
