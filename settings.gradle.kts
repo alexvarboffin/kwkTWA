@@ -20,8 +20,8 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "Android TWA Trusted Web Activity"
-//include(":app")
-//include(":app2")
+include(":app")
+include(":app2")
 include(":app_scoreapp")
 include(":app_scoreap_2")
 

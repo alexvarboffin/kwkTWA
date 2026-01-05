@@ -14,6 +14,9 @@ android {
         consumerProguardFiles("consumer-rules.pro")
     }
 
+    buildFeatures{
+        buildConfig = true
+    }
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -33,7 +36,7 @@ android {
 }
 
 dependencies {
-
+    implementation(libs.androidbrowserhelper)
     implementation(libs.core.ktx)
     implementation(libs.appcompat)
     implementation(libs.material)

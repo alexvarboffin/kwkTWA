@@ -8,20 +8,19 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.LinearLayout
-import com.wsms.app.web.CustomTabs
+import com.walhalla.common.CustomTabs
+
 import com.wsms.app.web.TwaLauncherUtils
 
 fun makeDemoToolbar(context: Activity, parent: ViewGroup, defUrl :String) {
     // Create a LinearLayout with horizontal orientation for RadioButtons
     val radioLayout = LinearLayout(context)
-    radioLayout.setLayoutParams(
-        LinearLayout.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT
-        )
+    radioLayout.layoutParams = LinearLayout.LayoutParams(
+        ViewGroup.LayoutParams.MATCH_PARENT,
+        ViewGroup.LayoutParams.WRAP_CONTENT
     )
-    radioLayout.setOrientation(LinearLayout.HORIZONTAL)
-    radioLayout.setGravity(Gravity.CENTER)
+    radioLayout.orientation = LinearLayout.HORIZONTAL
+    radioLayout.gravity = Gravity.CENTER
     radioLayout.setBackgroundColor(Color.RED)
 
 
@@ -48,8 +47,8 @@ fun makeDemoToolbar(context: Activity, parent: ViewGroup, defUrl :String) {
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
     )
-    layout.setOrientation(LinearLayout.HORIZONTAL)
-    layout.setGravity(Gravity.CENTER)
+    layout.orientation = LinearLayout.HORIZONTAL
+    layout.gravity = Gravity.CENTER
     //layout.addView(button);
     //layout.addView(btnWebView);
     layout.addView(buttonTWA)
@@ -68,15 +67,15 @@ fun makeDemoToolbar(context: Activity, parent: ViewGroup, defUrl :String) {
     buttonTWA.setOnClickListener(View.OnClickListener { v: View? ->
         TwaLauncherUtils(context).launchUrl(defUrl)
     })
-    buttonCts.setOnClickListener(View.OnClickListener { v: View? ->
+    buttonCts.setOnClickListener { v: View? ->
         CustomTabs(context).launchUrl(defUrl)
-    })
+    }
     // Add RadioGroup to LinearLayout
     radioLayout.addView(layout)
 
     // Add LinearLayout to the main layout container
     parent.addView(radioLayout)
-    val layoutParams = radioLayout.getLayoutParams() as FrameLayout.LayoutParams
+    val layoutParams = radioLayout.layoutParams as FrameLayout.LayoutParams
     layoutParams.gravity = Gravity.BOTTOM
-    radioLayout.setLayoutParams(layoutParams)
+    radioLayout.layoutParams = layoutParams
 }

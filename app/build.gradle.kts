@@ -53,6 +53,8 @@ android {
 }
 
 dependencies {
+    implementation(project(":common"))
+
     implementation(libs.androidbrowserhelper)
     implementation(libs.appcompat)
     implementation(libs.material)
