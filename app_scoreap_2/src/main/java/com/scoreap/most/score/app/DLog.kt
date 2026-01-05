@@ -3,7 +3,7 @@ package com.scoreap.most.score.app
 import android.content.Context
 import android.content.pm.PackageManager
 import android.util.Log
-import androidx.multidex.BuildConfig
+
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.zip.ZipFile
